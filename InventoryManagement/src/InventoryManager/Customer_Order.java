@@ -1,6 +1,7 @@
 package InventoryManager;
 import java.awt.EventQueue;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 
 import javax.swing.JFrame;
 import java.awt.FlowLayout;
@@ -8,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
-import java.awt.Image;
+import java.awt.Window;
 
 import javax.swing.SwingConstants;
 import java.awt.Color;
@@ -18,7 +19,6 @@ import javax.swing.border.TitledBorder;
 import net.proteanit.sql.DbUtils;
 
 import javax.swing.JTextField;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -31,14 +31,16 @@ import java.awt.event.KeyEvent;
 import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
 import javax.swing.JScrollBar;
+import com.toedter.calendar.JDateChooser;
 
-public class SabTrendahan {
+public class Customer_Order {
 
+	protected static final DbUtils Payment = null;
+	protected static final String ORDER_ID = null;
+	private JTextField txtbProductCode;
 	private JFrame frame;
-	private JTextField txtbName;
-	private JTextField txtbCost;
-	private JTextField txtbQuantity;
-	private JTextField txtbLimitQuantity;
+	private JTextField txtbCustomerID;
+	private JTextField txtbOrderQuantity;
 	private JTable table;
 	private JTextField txtbSC;
 
@@ -49,7 +51,7 @@ public class SabTrendahan {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SabTrendahan window = new SabTrendahan();
+					Customer_Order window = new Customer_Order();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -61,7 +63,7 @@ public class SabTrendahan {
 	/**
 	 * Create the application.
 	 */
-	public SabTrendahan() {
+	public Customer_Order() {
 		initialize();
 		Connect();
 		table_load();
@@ -71,6 +73,7 @@ public class SabTrendahan {
 	Connection con;
 	PreparedStatement pst;
 	ResultSet rs;
+	private JTextField txtbOrderCost;
 	
 	public void Connect()
 	{
@@ -80,11 +83,11 @@ public class SabTrendahan {
 		}
 		catch (ClassNotFoundException ex)
 		{
-			
+			ex.printStackTrace();
 		}
 		catch (SQLException ex)
 		{
-			
+			ex.printStackTrace();
 		}
 		
 	}
@@ -93,7 +96,7 @@ public class SabTrendahan {
 	{
 		try
 		{
-			pst = con.prepareStatement("SELECT * FROM products_inventory");
+			pst = con.prepareStatement("SELECT * FROM customer_order");
 			rs = pst.executeQuery();
 			table.setModel(DbUtils.resultSetToTableModel(rs));
 		}
@@ -105,124 +108,115 @@ public class SabTrendahan {
 	
 	private void initialize() {
 		frame = new JFrame();
-		frame.getContentPane().setBackground(new Color(255, 235, 205));
-		frame.setBounds(100, 100, 1479, 593);
+		frame.getContentPane().setBackground(new Color(245, 222, 179));
+		frame.setBounds(100, 100, 1479, 591);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(20, 202, 475, 233);
+		panel.setBounds(20, 209, 475, 227);
 		panel.setBackground(new Color(255, 160, 122));
 		panel.setBorder(new TitledBorder(null, "Registration", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JLabel lblNewLabel_1_1 = new JLabel("Product Name");
-		lblNewLabel_1_1.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
-		lblNewLabel_1_1.setBounds(10, 22, 168, 24);
-		panel.add(lblNewLabel_1_1);
-		
-		JLabel lblNewLabel_1_2 = new JLabel("Product Cost");
+		JLabel lblNewLabel_1_2 = new JLabel("Customer ID");
 		lblNewLabel_1_2.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
-		lblNewLabel_1_2.setBounds(10, 57, 168, 24);
+		lblNewLabel_1_2.setBounds(10, 23, 168, 24);
 		panel.add(lblNewLabel_1_2);
 		
-		JLabel lblNewLabel_1_3 = new JLabel("Product Type");
+		JLabel lblNewLabel_1_3 = new JLabel("Product Code");
 		lblNewLabel_1_3.setBackground(new Color(255, 165, 0));
 		lblNewLabel_1_3.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
-		lblNewLabel_1_3.setBounds(10, 92, 168, 24);
+		lblNewLabel_1_3.setBounds(10, 58, 168, 24);
 		panel.add(lblNewLabel_1_3);
 		
-		JLabel lblNewLabel_1_3_1 = new JLabel("Product Size");
+		JLabel lblNewLabel_1_3_1 = new JLabel("Order Cost");
 		lblNewLabel_1_3_1.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
-		lblNewLabel_1_3_1.setBounds(10, 125, 122, 24);
+		lblNewLabel_1_3_1.setBounds(10, 93, 122, 24);
 		panel.add(lblNewLabel_1_3_1);
 		
-		JLabel lblNewLabel_1_3_2 = new JLabel("Product Quantity");
+		JLabel lblNewLabel_1_3_2 = new JLabel("Order Size");
 		lblNewLabel_1_3_2.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
-		lblNewLabel_1_3_2.setBounds(10, 152, 168, 34);
+		lblNewLabel_1_3_2.setBounds(10, 120, 168, 34);
 		panel.add(lblNewLabel_1_3_2);
 		
-		JLabel lblNewLabel_1_3_3 = new JLabel("Product Limit Quantity");
+		JLabel lblNewLabel_1_3_3 = new JLabel("Order Quantity");
 		lblNewLabel_1_3_3.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
-		lblNewLabel_1_3_3.setBounds(10, 184, 168, 37);
+		lblNewLabel_1_3_3.setBounds(10, 151, 168, 37);
 		panel.add(lblNewLabel_1_3_3);
 		
-		txtbName = new JTextField();
-		txtbName.setColumns(10);
-		txtbName.setBounds(199, 27, 266, 20);
-		panel.add(txtbName);
+		txtbCustomerID = new JTextField();
+		txtbCustomerID.setColumns(10);
+		txtbCustomerID.setBounds(199, 28, 266, 20);
+		panel.add(txtbCustomerID);
 		
-		txtbCost = new JTextField();
-		txtbCost.setColumns(10);
-		txtbCost.setBounds(199, 61, 266, 20);
-		panel.add(txtbCost);
+		JTextField txtbOrderQuantity = new JTextField();
+		txtbOrderQuantity.setColumns(10);
+		txtbOrderQuantity.setBounds(199, 160, 266, 20);
+		panel.add(txtbOrderQuantity);
 		
-		txtbQuantity = new JTextField();
-		txtbQuantity.setColumns(10);
-		txtbQuantity.setBounds(199, 160, 266, 24);
-		panel.add(txtbQuantity);
+		txtbProductCode = new JTextField();
+		txtbProductCode.setColumns(10);
+		txtbProductCode.setBounds(199, 63, 266, 20);
+		panel.add(txtbProductCode);
 		
-		txtbLimitQuantity = new JTextField();
-		txtbLimitQuantity.setColumns(10);
-		txtbLimitQuantity.setBounds(199, 193, 266, 24);
-		panel.add(txtbLimitQuantity);
+		txtbOrderCost = new JTextField();
+		txtbOrderCost.setColumns(10);
+		txtbOrderCost.setBounds(199, 98, 266, 20);
+		panel.add(txtbOrderCost);
 		
-		JComboBox<String> comboBoxP_Type = new JComboBox<String>();
-		comboBoxP_Type.addItem("");
-		comboBoxP_Type.addItem("T-Shirt");
-		comboBoxP_Type.addItem("Sando");
-		comboBoxP_Type.addItem("Crop top");
-		comboBoxP_Type.addItem("Dress");
-		comboBoxP_Type.addItem("Hoodie");
-		comboBoxP_Type.addItem("Jacket");
-		comboBoxP_Type.addItem("Blazer");
-		comboBoxP_Type.setBounds(199, 92, 266, 22);
-		panel.add(comboBoxP_Type);
+		JLabel txtbDate = new JLabel("Order Date");
+		txtbDate.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
+		txtbDate.setBounds(10, 184, 168, 37);
+		panel.add(txtbDate);
 		
-		JComboBox<String> comboBoxP_Size = new JComboBox<String>();
-		comboBoxP_Size.addItem("");
-		comboBoxP_Size.addItem("Extra Small");
-		comboBoxP_Size.addItem("Small");
-		comboBoxP_Size.addItem("Medium");
-		comboBoxP_Size.addItem("Large");
-		comboBoxP_Size.addItem("Extra Large");
-		comboBoxP_Size.setBounds(199, 127, 266, 22);
-		panel.add(comboBoxP_Size);
+		JDateChooser date_OrderDate = new JDateChooser();
+		date_OrderDate.setBounds(199, 191, 266, 20);
+		panel.add(date_OrderDate);
 		
-		JButton btnNewButton = new JButton("Save"); //FOR SAVE JBUTTON Manipulation
-		btnNewButton.setBounds(31, 448, 105, 42);
-		btnNewButton.setBackground(Color.LIGHT_GRAY);
-		btnNewButton.addActionListener(new ActionListener() {
+		JComboBox<String> comboBoxO_Size = new JComboBox<String>();
+		comboBoxO_Size.addItem("");
+		comboBoxO_Size.addItem("Extra Small");
+		comboBoxO_Size.addItem("Small");
+		comboBoxO_Size.addItem("Medium");
+		comboBoxO_Size.addItem("Large");
+		comboBoxO_Size.addItem("Extra Large");
+		comboBoxO_Size.setBounds(199, 129, 266, 22);
+		panel.add(comboBoxO_Size);
+		
+		JButton btnSaveCustomer = new JButton("Save"); //FOR SAVE JBUTTON Manipulation
+		btnSaveCustomer.setBounds(30, 447, 105, 42);
+		btnSaveCustomer.setBackground(Color.LIGHT_GRAY);
+		btnSaveCustomer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				String pi_bName, pi_bCost, pi_bType, pi_bSize, pi_bQuantity, pi_bLQuantity;
-				
-				pi_bName = txtbName.getText();
-				pi_bCost = txtbCost.getText();
-				pi_bType = (String) comboBoxP_Type.getSelectedItem();
-				pi_bSize = (String) comboBoxP_Size.getSelectedItem();
-				pi_bQuantity = txtbQuantity.getText();
-				pi_bLQuantity = txtbLimitQuantity.getText();
-				
+				String co_bCustomerID, co_bOrderCost, co_bProductCode, co_bOrderSize, co_bOrderQuantity, co_bOrderDate;
+				co_bCustomerID = txtbCustomerID.getText();
+				co_bProductCode = txtbProductCode.getText();
+				co_bOrderCost = txtbOrderCost.getText();
+				co_bOrderSize = (String) comboBoxO_Size.getSelectedItem();
+				co_bOrderQuantity = txtbOrderQuantity.getText();
+				co_bOrderDate = txtbDate.getText();
 				try {
-					pst = con.prepareStatement("insert into products_inventory(PRODUCT_NAME, PRODUCT_COST, PRODUCT_TYPE, PRODUCT_SIZE, PRODUCT_QUANTITY, PRODUCT_LIMITQUANTITY)values(?,?,?,?,?,?)");
-					pst.setString(1, pi_bName);
-					pst.setString(2, pi_bCost);
-					pst.setString(3, pi_bType);
-					pst.setString(4, pi_bSize);
-					pst.setString(5, pi_bQuantity);
-					pst.setString(6, pi_bLQuantity);
+					pst = con.prepareStatement("insert into customer_order(CUSTOMER_ID, PRODUCT_CODE, ORDER_COST, ORDER_SIZE, ORDER_QUANTITY, ORDER_DATE)values(?,?,?,?,?,?)");
+					pst.setString(1, co_bCustomerID);
+					pst.setString(2, co_bProductCode);
+					pst.setString(3, co_bOrderCost);
+					pst.setString(4, co_bOrderSize);
+					pst.setString(5, co_bOrderQuantity);
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					String date = sdf.format(date_OrderDate.getDate());
+					pst.setString(6, date);
 					pst.executeUpdate();
 					JOptionPane.showMessageDialog(null, "Record Added!");
-					table_load();
-					txtbName.setText("");
-					txtbCost.setText("");
-					comboBoxP_Type.setSelectedItem(1);
-					comboBoxP_Size.setSelectedItem(1);
-					txtbQuantity.setText("");
-					txtbLimitQuantity.setText("");
-					txtbName.requestFocus();
+					txtbCustomerID.setText("");
+					txtbProductCode.setText("");
+					txtbOrderCost.setText("");
+					comboBoxO_Size.setSelectedItem("");
+					txtbOrderQuantity.setText("");
+					date_OrderDate.setToolTipText("");
+					txtbCustomerID.requestFocus();
 				}
 				
 				catch (SQLException e1) {
@@ -230,11 +224,11 @@ public class SabTrendahan {
 				}
 			}
 		});
-		btnNewButton.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
-		frame.getContentPane().add(btnNewButton);
+		btnSaveCustomer.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
+		frame.getContentPane().add(btnSaveCustomer);
 		
 		JButton btnExit = new JButton("Exit"); //EXIT JButton Manipulation
-		btnExit.setBounds(375, 501, 105, 42);
+		btnExit.setBounds(374, 500, 105, 42);
 		btnExit.setBackground(new Color(205, 92, 92));
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -245,30 +239,31 @@ public class SabTrendahan {
 		frame.getContentPane().add(btnExit);
 		
 		JButton btnClear = new JButton("Clear");
-		btnClear.setBounds(260, 448, 105, 42);
+		btnClear.setBounds(259, 447, 105, 42);
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				txtbName.setText("");
-				txtbCost.setText("");
-				comboBoxP_Type.setSelectedItem(1);
-				comboBoxP_Size.setSelectedItem(1);
-				txtbQuantity.setText("");
-				txtbLimitQuantity.setText("");
-				txtbName.requestFocus();
+				txtbSC.setText("");
+				txtbCustomerID.setText("");
+				txtbProductCode.setText("");
+				txtbOrderCost.setText("");
+				comboBoxO_Size.setSelectedItem("");
+				txtbOrderQuantity.setText("");
+				date_OrderDate.setToolTipText("");
+				txtbCustomerID.requestFocus();
 			}
 		});
 		btnClear.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
 		frame.getContentPane().add(btnClear);
 		
 		JScrollPane products_Inventory_Screen = new JScrollPane();
-		products_Inventory_Screen.setBounds(505, 128, 936, 415);
+		products_Inventory_Screen.setBounds(505, 128, 936, 416);
 		frame.getContentPane().add(products_Inventory_Screen);
 		
 		table = new JTable();
 		products_Inventory_Screen.setViewportView(table);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(20, 152, 475, 42);
+		panel_1.setBounds(20, 156, 475, 42);
 		panel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_1.setBackground(new Color(255, 160, 122));
 		frame.getContentPane().add(panel_1);
@@ -285,36 +280,37 @@ public class SabTrendahan {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				try {
-					String product_Code = txtbSC.getText();
+					String ORDER_CODE = txtbSC.getText();
 					//
-					pst = con.prepareStatement("select PRODUCT_NAME, PRODUCT_COST, PRODUCT_TYPE, PRODUCT_SIZE, PRODUCT_QUANTITY, PRODUCT_LIMITQUANTITY from products_inventory where PRODUCT_CODE = ?");
-					pst.setString(1, product_Code);
+					pst = con.prepareStatement("select CUSTOMER_ID, PRODUCT_CODE, ORDER_COST, ORDER_SIZE, ORDER_QUANTITY, ORDER_DATE from customer_order where ORDER_CODE = ?");
+					pst.setString(1, ORDER_CODE);
 					ResultSet rs = pst.executeQuery();
 					
 					if(rs.next() == true)
 					{
-						String product_Name = rs.getString(1);
-						String product_Cost = rs.getString(2);
-						String product_Type = rs.getString(3);
-						String product_Sizes = rs.getString(4);
-						String product_Quantity = rs.getString(5);
-						String product_LimitQuantity = rs.getString(6);
-						txtbName.setText(product_Name);
-						txtbCost.setText(product_Cost);
-						comboBoxP_Type.setSelectedItem(product_Type);
-						comboBoxP_Size.setSelectedItem(product_Sizes);
-						txtbQuantity.setText(product_Quantity);
-						txtbLimitQuantity.setText(product_LimitQuantity);
+						String CUSTOMER_ID = rs.getString(1);
+						String PRODUCT_CODE = rs.getString(2);
+						String ORDER_COST = rs.getString(3);
+						String ORDER_SIZE = rs.getString(4);
+						String ORDER_QUANTITY = rs.getString(5);
+						String ORDER_DATE = rs.getString(6);
+						txtbSC.setText(ORDER_CODE);
+						txtbCustomerID.setText(CUSTOMER_ID);
+						txtbProductCode.setText(PRODUCT_CODE);
+						txtbOrderCost.setText(ORDER_COST);
+						comboBoxO_Size.setSelectedItem(ORDER_SIZE);
+						txtbOrderQuantity.setText(ORDER_QUANTITY);
+						date_OrderDate.setToolTipText(ORDER_DATE);
 					}
 					else
 					{
 						txtbSC.setText("");
-						txtbName.setText("");
-						txtbCost.setText("");
-						comboBoxP_Type.setSelectedItem("");
-						comboBoxP_Size.setSelectedItem("");
-						txtbQuantity.setText("");
-						txtbLimitQuantity.setText("");
+						txtbCustomerID.setText("");
+						txtbProductCode.setText("");
+						txtbOrderCost.setText("");
+						comboBoxO_Size.setSelectedItem("");
+						txtbOrderQuantity.setText("");
+						date_OrderDate.setToolTipText("");
 					}
 				}
 				catch (SQLException ex) {
@@ -326,41 +322,43 @@ public class SabTrendahan {
 		txtbSC.setBounds(192, 10, 273, 20);	
 		panel_1.add(txtbSC);
 		
-		JButton btnUpdate = new JButton("Update");
-		btnUpdate.setBackground(new Color(30, 144, 255));
-		btnUpdate.setBounds(145, 448, 105, 42);
-		btnUpdate.addActionListener(new ActionListener() {
+		JButton btnUpdateCustomer = new JButton("Update");
+		btnUpdateCustomer.setBackground(new Color(30, 144, 255));
+		btnUpdateCustomer.setBounds(144, 447, 105, 42);
+		btnUpdateCustomer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String pi_bCode, pi_bName, pi_bCost, pi_bType, pi_bSize, pi_bQuantity, pi_bLQuantity;
+				String co_bSC, co_bCustomerID, co_bOrderCost, co_bProductCode, co_bOrderSize, co_bOrderQuantity, co_bOrderDate;
 				
-				pi_bCode = txtbSC.getText();
-				pi_bName = txtbName.getText();
-				pi_bCost = txtbCost.getText();
-				pi_bType = (String) comboBoxP_Type.getSelectedItem();
-				pi_bSize = (String) comboBoxP_Size.getSelectedItem();
-				pi_bQuantity = txtbQuantity.getText();
-				pi_bLQuantity = txtbLimitQuantity.getText();
+				co_bSC = txtbSC.getText();
+				co_bCustomerID = txtbCustomerID.getText();
+				co_bProductCode = txtbProductCode.getText();
+				co_bOrderCost = txtbOrderCost.getText();
+				co_bOrderSize = (String) comboBoxO_Size.getSelectedItem();
+				co_bOrderQuantity = txtbOrderQuantity.getText();
+				co_bOrderDate = txtbDate.getText();
 				
 				try {
-					pst = con.prepareStatement("update products_inventory set PRODUCT_NAME = ?, PRODUCT_COST = ?, PRODUCT_TYPE = ?, PRODUCT_SIZE = ?, PRODUCT_QUANTITY = ?, PRODUCT_LIMITQUANTITY = ? where PRODUCT_CODE = ?");
-					pst.setString(1, pi_bName);
-					pst.setString(2, pi_bCost);
-					pst.setString(3, pi_bType);
-					pst.setString(4, pi_bSize);
-					pst.setString(5, pi_bQuantity);
-					pst.setString(6, pi_bLQuantity);
-					pst.setString(7, pi_bCode);
+					pst = con.prepareStatement("update customer_order set CUSTOMER_ID = ?, PRODUCT_CODE = ?, ORDER_COST = ?, ORDER_SIZE = ?, ORDER_QUANTITY = ?, ORDER_DATE = ?  where ORDER_CODE = ?");
+					pst.setString(1, co_bCustomerID);
+					pst.setString(2, co_bProductCode);
+					pst.setString(3, co_bOrderCost);
+					pst.setString(4, co_bOrderSize);
+					pst.setString(5, co_bOrderQuantity);
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					String date = sdf.format(date_OrderDate.getDate());
+					pst.setString(6, date);
+					pst.setString(7,  co_bSC);
 					pst.executeUpdate();
-					JOptionPane.showMessageDialog(null,  "Record Update!");
+					JOptionPane.showMessageDialog(null, "Record Update!");
 					table_load();
 					txtbSC.setText("");
-					txtbName.setText("");
-					txtbCost.setText("");
-					comboBoxP_Type.setSelectedItem(1);
-					comboBoxP_Size.setSelectedItem(1);
-					txtbQuantity.setText("");
-					txtbLimitQuantity.setText("");
-					txtbName.requestFocus();
+					txtbCustomerID.setText("");
+					txtbProductCode.setText("");
+					txtbOrderCost.setText("");
+					comboBoxO_Size.setSelectedItem("");;
+					txtbOrderQuantity.setText("");
+					date_OrderDate.setToolTipText("");
+					txtbCustomerID.requestFocus();
 				}
 				
 				catch (SQLException e1) {
@@ -368,31 +366,29 @@ public class SabTrendahan {
 				}
 			}
 		});
-		btnUpdate.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
-		frame.getContentPane().add(btnUpdate);
+		btnUpdateCustomer.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
+		frame.getContentPane().add(btnUpdateCustomer);
 		
-		JButton btnNewButton_1 = new JButton("Delete");
-		btnNewButton_1.setBounds(375, 448, 105, 42);
-		btnNewButton_1.setBackground(new Color(250, 128, 114));
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.setBounds(374, 447, 105, 42);
+		btnDelete.setBackground(new Color(250, 128, 114));
+		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String product_Code;
+				String order_code;
 				
-				product_Code =  txtbSC.getText();
-				
+				order_code = txtbSC.getText();
 				try {
-					pst = con.prepareStatement("delete from products_inventory where PRODUCT_CODE = ?");
-					pst.setString(1, product_Code);
+					pst = con.prepareStatement("delete from customer_order where ORDER_CODE = ?");
+					pst.setString(1, order_code);
 					pst.executeUpdate();
 					JOptionPane.showMessageDialog(null, "Record Succesfully Deleted!");
 					table_load();
-					txtbName.setText("");
-					txtbCost.setText("");
-					comboBoxP_Type.setSelectedItem("");
-					comboBoxP_Size.setSelectedItem("");
-					txtbQuantity.setText("");
-					txtbLimitQuantity.setText("");
-					txtbName.requestFocus();
+					txtbCustomerID.setText("");
+					txtbProductCode.setText("");
+					txtbOrderCost.setText("");
+					comboBoxO_Size.setSelectedItem("");
+					txtbOrderQuantity.setText("");
+					txtbCustomerID.requestFocus();
 				}
 				
 				catch (SQLException e1) {
@@ -400,13 +396,20 @@ public class SabTrendahan {
 				}
 			}
 		});
-		btnNewButton_1.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
-		frame.getContentPane().add(btnNewButton_1);
+		btnDelete.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
+		frame.getContentPane().add(btnDelete);
 		
 		JButton btnNewButton_2 = new JButton(""); 
 		btnNewButton_2.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 19));
 		btnNewButton_2.setBackground(Color.LIGHT_GRAY);
 		frame.getContentPane().add(btnNewButton_2);
+		
+		JLabel lblCustomersOrderRecord = new JLabel("Customer's Order Record");
+		lblCustomersOrderRecord.setForeground(Color.BLACK);
+		lblCustomersOrderRecord.setFont(new Font("Franklin Gothic Demi Cond", Font.BOLD, 30));
+		lblCustomersOrderRecord.setBackground(new Color(255, 248, 220));
+		lblCustomersOrderRecord.setBounds(811, 82, 309, 35);
+		frame.getContentPane().add(lblCustomersOrderRecord);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setLayout(null);
@@ -420,14 +423,6 @@ public class SabTrendahan {
 		lblNewLabel.setBackground(new Color(255, 248, 220));
 		lblNewLabel.setBounds(111, 20, 305, 35);
 		panel_2.add(lblNewLabel);
-		
-		
-		JLabel lblProductsInventory = new JLabel("Products Inventory");
-		lblProductsInventory.setForeground(Color.BLACK);
-		lblProductsInventory.setFont(new Font("Franklin Gothic Demi Cond", Font.BOLD, 30));
-		lblProductsInventory.setBackground(new Color(255, 248, 220));
-		lblProductsInventory.setBounds(891, 82, 309, 35);
-		frame.getContentPane().add(lblProductsInventory);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setLayout(null);
@@ -475,7 +470,7 @@ public class SabTrendahan {
 		btnSupplier.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
-				Payment.main(null);
+				DbUtils.main(null);
 			}
 		});
 		btnSupplier.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 13));
@@ -490,7 +485,7 @@ public class SabTrendahan {
 				Supplier.main(null);
 			}
 		});
-		btnSupplier_1.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 14));
+		btnSupplier_1.setFont(new Font("Franklin Gothic Demi Cond", Font.PLAIN, 13));
 		btnSupplier_1.setBackground(new Color(255, 222, 173));
 		btnSupplier_1.setBounds(388, 13, 76, 42);
 		panel_3.add(btnSupplier_1);
